@@ -95,3 +95,67 @@ def generate_html_code(block):
     text = block.strip("```")
     children = [LeafNode("code", text)]
     return ParentNode("pre", children)
+
+def generate_html_quote(block):
+    lines = block.split("\n")
+    children = []
+    for line in lines:
+        text = line.strip(">")
+        if text:
+            text_nodes = text_to_textnodes(text)
+            for textnode in text_nodes:
+                leafnode = text_node_to_html_node(textnode)
+                children.append(leafnode)
+    return ParentNode("blockquote", children)
+
+def generate_html_unodr_lst(block):
+    children = []
+    if block.startswith("*"):
+        lines = block.split("\n")
+        for line in lines:
+            li_children = []
+            text = line.lstrip("*").strip()
+            if text:
+                text_nodes = text_to_textnodes(text)
+                for textnode in text_nodes:
+                    leafnode = text_node_to_html_node(textnode)
+                    li_children.append(leafnode)
+            children.append(ParentNode("li", li_children))
+    elif block.startswith("-"):
+        lines = block.split("\n")
+        for line in lines:
+            li_children = []
+            text = line.lstrip("-").strip()
+            if text:
+                text_nodes = text_to_textnodes(text)
+                for textnode in text_nodes:
+                    leafnode = text_node_to_html_node(textnode)
+                    li_children.append(leafnode)
+            children.append(ParentNode("li", li_children))
+    return ParentNode("ul", children)
+
+def generate_html_odr_lst(block):
+    children = []
+    lines = block.split("\n")
+    for i, line in enumerate(lines):
+        li_children = []
+        text = line.strip(f"{i+1}. ")
+        if text:
+            text_nodes = text_to_textnodes(text)
+            for textnode in text_nodes:
+                leafnode = text_node_to_html_node(textnode)
+                li_children.append(leafnode)
+            children.append(ParentNode("li", li_children))
+    return ParentNode("ol", children)
+
+def generate_html_para(block):
+    children = []
+    lines = block.split("\n")
+    for line in lines:
+        text = line.strip()
+        if text:
+            text_nodes = text_to_textnodes(text)
+            for textnode in text_nodes:
+                leafnode = text_node_to_html_node(textnode)
+                children.append(leafnode)
+    return ParentNode("p", children)
