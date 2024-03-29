@@ -1,5 +1,6 @@
 from block_markdown import markdown_to_blocks, block_to_block_type, markdown_to_html_code
 import os
+from copystatic import list_all
 
 def extract_title(markdown):
     blocks = markdown_to_blocks(markdown)
@@ -39,3 +40,10 @@ def generate_page(from_path, template_path, dest_path):
                     
         with open(dest_path, "w") as f:
             f.write(updated_template)
+
+def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
+    contents = list_all(dir_path_content)
+    for item in contents:
+        if os.path.isfile(item) and item.endswith(".md"):
+            updated_dest_path = (item.replace(dir_path_content, dest_dir_path)).replace(".md", ".html")
+            generate_page(item, template_path, updated_dest_path)
