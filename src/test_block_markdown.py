@@ -1,6 +1,6 @@
 import unittest
 from htmlnode import ParentNode, LeafNode
-from block_markdown import markdown_to_blocks, block_to_block_type, generate_html_heading, generate_html_code, generate_html_quote, generate_html_unodr_lst, generate_html_odr_lst, generate_html_para
+from block_markdown import markdown_to_blocks, block_to_block_type, generate_html_heading, generate_html_code, generate_html_quote, generate_html_unodr_lst, generate_html_odr_lst, generate_html_para, markdown_to_html_code
 
 class TestBlockMarkdown(unittest.TestCase):
     def test_markdown_to_blocks(self):
@@ -205,6 +205,41 @@ class TestBlockMarkdown(unittest.TestCase):
                     self.assertEqual(recieved.children[i].tag, childnode.tag)
                     self.assertEqual(recieved.children[i].value, childnode.value)
                     self.assertEqual(recieved.children[i].props, childnode.props)
+
+    def test_markdown_to_html_code(self):
+        test_cases = [(
+            """# This is a heading
+
+This is a paragraph of text. It has some **bold** and *italic* words inside of it.
+
+* This is a list item
+* This is another list item""",
+            ParentNode("div", [
+                ParentNode("h1", [LeafNode(None, "This is a heading")]),
+                ParentNode("p", [LeafNode(None, "This is a paragraph of text. It has some "), LeafNode("b", "bold"), LeafNode(None, " and "), LeafNode("i", "italic"), LeafNode(None, " words inside of it.")]),
+                ParentNode("ul", [ParentNode("li", [LeafNode(None, "This is a list item")]), ParentNode("li", [LeafNode(None, "This is another list item")])])]
+                )
+                )
+        ]
+
+        for test in test_cases:
+            expected = test[1]
+            recieved = markdown_to_html_code(test[0])
+            self.assertEqual(expected.tag, recieved.tag)
+
+            for z, node in enumerate(expected.children):
+                if node.tag == "ul" or node.tag == "ol":
+                    for i, childnode in enumerate(node.children):
+                        self.assertEqual(childnode.tag, recieved.children[z].children[i].tag)
+                        for j, grandchild in enumerate(childnode.children):
+                            self.assertEqual(recieved.children[z].children[i].children[j].tag, grandchild.tag)
+                            self.assertEqual(recieved.children[z].children[i].children[j].value, grandchild.value)
+                            self.assertEqual(recieved.children[z].children[i].children[j].props, grandchild.props)
+                else:
+                    for i, childnode in enumerate(node.children):
+                        self.assertEqual(recieved.children[z].children[i].tag, childnode.tag)
+                        self.assertEqual(recieved.children[z].children[i].value, childnode.value)
+                        self.assertEqual(recieved.children[z].children[i].props, childnode.props)
 
 
 if __name__ =="__main__":

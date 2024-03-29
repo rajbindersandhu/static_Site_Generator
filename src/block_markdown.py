@@ -159,3 +159,31 @@ def generate_html_para(block):
                 leafnode = text_node_to_html_node(textnode)
                 children.append(leafnode)
     return ParentNode("p", children)
+
+
+def markdown_to_html_code(markdown):
+    if markdown:
+        children = []
+        blocks = markdown_to_blocks(markdown)
+        for block in blocks:
+            block_type = block_to_block_type(block)
+            match block_type:
+                case "heading":
+                    children.append(generate_html_heading(block))
+                case "code":
+                    children.append(generate_html_code(block))
+                case "quote":
+                    children.append(generate_html_quote(block))
+                case "ul":
+                    children.append(generate_html_unodr_lst(block))
+                case "ol":
+                    children.append(generate_html_odr_lst(block))
+                case "paragraph":
+                    children.append(generate_html_para(block))
+                case _:
+                    raise ValueError("No such block type exists")
+                
+        return ParentNode("div", children)
+
+    else:
+        raise ValueError("No markdown available for conversion to HTML")
