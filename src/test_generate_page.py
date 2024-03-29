@@ -30,6 +30,20 @@ This is a paragraph of text. It has some **bold** and *italic* words inside of i
             recieved = extract_title(test[0])
             self.assertEqual(expected, recieved)
 
+    # def test(self):
+    #     dir_path = os.path.dirname("./public/test/test1/test2/")
+    #     print(dir_path)
+    #     nodes = dir_path.split("/")
+    #     cur_path = ""
+    #     print(nodes)
+    #     for node in nodes:
+    #         if node == "." or node == "..":
+    #             cur_path += node + "/"
+    #         else:
+    #             cur_path += node + "/"
+    #             if not os.path.exists(cur_path):
+    #                 os.mkdir(cur_path)
+
         
 
 if "__name__" == "__main__":

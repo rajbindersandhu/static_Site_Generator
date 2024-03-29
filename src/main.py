@@ -1,9 +1,10 @@
-from textnode import TextNode
+from generate_page import generate_page
+from copystatic import copy_static_to_public
 
 
 def main():
-    textnode = TextNode("This is test", "test_type", "www.test.com")
-    print(textnode)
+    copy_static_to_public()
+    generate_page("./content/index.md", "./template.html", "./public/index.html")
 
 
 main()

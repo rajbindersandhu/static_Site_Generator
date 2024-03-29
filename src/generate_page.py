@@ -31,9 +31,9 @@ def generate_page(from_path, template_path, dest_path):
         cur_path = ""
         for node in nodes:
             if node == "." or node == "..":
-                cur_path += node
+                cur_path += node + "/"
             else:
-                cur_path += node
+                cur_path += node + "/"
                 if not os.path.exists(cur_path):
                     os.mkdir(cur_path)
                     
